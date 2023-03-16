@@ -6,5 +6,7 @@ class ListSongSerializers(serializers.ModelSerializer):
         model = ListSong
         fields = [
             "id",
-            
+            "buyed_at"
         ]
+    def create(self, validated_data: dict) -> ListSong:
+        return ListSong.objects.create()
