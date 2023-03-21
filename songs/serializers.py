@@ -14,7 +14,8 @@ class SongSerializer(serializers.ModelSerializer):
         model = Song
         fields = [
             "id",
-            "link",
+            "link"
+           
         ]
         read_only_fields = ["id"]
 
@@ -34,5 +35,5 @@ class SongSerializer(serializers.ModelSerializer):
                 new_file = mp.AudioFileClip(mp4_path)
                 new_file.write_audiofile(mp3_path)
                 os.remove(mp4_path)
-               
             return Song.objects.create(**validated_data)
+           

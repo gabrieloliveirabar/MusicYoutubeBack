@@ -1,10 +1,22 @@
 from rest_framework import serializers
 from .models import User
 
+
 class UserSerializer(serializers.ModelSerializer):
-    def create(self, validate_data: dict) -> User:
-        return User.objects.create_superuser(**validate_data)
-    
+    class Meta:
+        model = User
+        fields = ["id", "username", "email", "password", "is_superuser"]
+        extra_kwargs = {"password": {"write_only": True}}
+        read_only_fields = [
+            "id",
+        ]
+        depth = 1
+
+    def create(self, validated_data: dict) -> User:
+        if validated_data["is_superuser"] == True:
+            return User.objects.create_superuser(**validated_data)
+        return User.objects.create_user(**validated_data)
+
     def update(self, instance: User, validated_data):
         for key, value in validated_data.items():
             if key == "password":
@@ -14,18 +26,3 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-    class Meta:
-        model = User
-        field = [
-            "id",
-            "username",
-            "email",
-            "password",
-            "is_superuser"    
-        ]
-        extra_kwargs = {"password":{"write_only":True}}
-        read_only_field = [
-            "id",
-            "is_superuser"
-        ]
