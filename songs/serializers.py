@@ -14,7 +14,8 @@ class SongSerializer(serializers.ModelSerializer):
         model = Song
         fields = [
             "id",
-            "link",
+            "link"
+           
         ]
         read_only_fields = ["id"]
 
@@ -26,6 +27,7 @@ class SongSerializer(serializers.ModelSerializer):
           yt = YouTube(link)
           ys = yt.streams.filter(only_audio=True).first().download(path)
           
+          
           for file in os.listdir(path):
             if re.search("mp4", file):
                 mp4_path = os.path.join(path, file)
@@ -33,5 +35,5 @@ class SongSerializer(serializers.ModelSerializer):
                 new_file = mp.AudioFileClip(mp4_path)
                 new_file.write_audiofile(mp3_path)
                 os.remove(mp4_path)
-               
             return Song.objects.create(**validated_data)
+           
